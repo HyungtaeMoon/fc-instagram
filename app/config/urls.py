@@ -20,7 +20,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('posts/', include('posts.urls')),
+    path('', include('posts.urls')),
     # path('media/<str:path>/', 특정view_function),
 
 ] + static(
