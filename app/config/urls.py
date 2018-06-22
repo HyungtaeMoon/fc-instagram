@@ -13,9 +13,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    # path('media/<str:path>/', 특정view_function),
+
+] + static(
+    prefix='/media/',
+    document_root=settings.MEDIA_ROOT,
+)
+#미디어로 왔을 때 이 루트로 찾겠다.
