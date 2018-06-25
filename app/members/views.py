@@ -1,9 +1,11 @@
-from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.shortcuts import render, redirect
 
-from posts.models import Post
+from .forms import SignupForm
+
+# User 클래스 자체를 가져올때는 get_user_model()
+# ForeignKey에 User모델을 지정할때는 settings.AUTH_USER_MODEL
+User = get_user_model()
 
 
 def login_view(request):
@@ -45,7 +47,44 @@ def logout_view(request):
         return redirect('index')
 
 
-def signup_view(request):
+def signup(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        context = {
+            'form': form,
+        }
+        # form에 들어있는 데이터가 유효한지 검사
+        if form.is_valid():
+            # 브라우저가 요구하는 형식을 만족
+            # 유효할 경우 유저 생성 및 redirect
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            password2 = form.cleaned_data['password2']
+            print(form.errors)
+
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+            )
+            login(request, user)
+            return redirect('index')
+        else:
+
+            return render(request, 'members/signup.html', context)
+
+    else:
+        form = SignupForm()
+        context = {
+            'form': form,
+        }
+        # if request.method == 'POST':
+
+        return render(request, 'members/signup.html', context)
+
+
+def signup_bak(request):
     context = {
         'errors': [],
     }
@@ -55,17 +94,40 @@ def signup_view(request):
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
 
-        if not username:
-            context['errors'].append('username을 채워주세요')
+        # 반드시 내용이 채워져야 하는 form의 필드 (위 변수명)
+        # hint: required_fields를 dict로
+        require_fields = {
+            'username': {
+                'verbose_name': '아이디',
+            },
+            'email': {
+                'verbose_name': '이메일',
+            },
+            'password': {
+                'verbose_name': '비밀번호',
+            },
+            'password2': {
+                'verbose_name': '비밀번호 확인',
+            },
+        }
+        for field_name in require_fields.keys():
+            if not locals()[field_name]:
+                context['errors'].append('{}을(를) 채워주세요.'.format(
+                    require_fields[field_name]['verbose_name'],
+                ))
 
-        if not email:
-            context['errors'].append('email을 채워주세요')
-
-        if not password:
-            context['password'].append('password를 채워주세요')
-
-        if not password2:
-            context['password2'].append('password2를 채워주세요')
+        # for문으로 작동하도록 수정
+        # if not username:
+        #     context['errors'].append('username을 채워주세요')
+        #
+        # if not email:
+        #     context['errors'].append('email을 채워주세요')
+        #
+        # if not password:
+        #     context['password'].append('password를 채워주세요')
+        #
+        # if not password2:
+        #     context['password2'].append('password2를 채워주세요')
 
         # 입력데이터 채워넣기
         context['username'] = username
@@ -89,3 +151,25 @@ def signup_view(request):
             return redirect('index')
 
     return render(request, 'members/signup.html', context)
+#
+#
+# def signup(request):
+#     if request.method == 'POST':
+#         username = request.POST['username']
+#         password = request.POST['password']
+#
+#         # exists를 사용해서 유저가 이미 존재하면 signup으로 다시 redirect
+#         if User.objects.filter(username=username).exists():
+#             context = {
+#                 'errors': [],
+#             }
+#             context['errors'].append('유저가 이미 존재함')
+#             return render(request, 'index', context)
+#         else:
+#             user = User.objects.create_user(
+#                 username=username,
+#                 password=password,
+#             )
+#             login(request, user)
+#             return redirect('index')
+#     return render(request, 'members/signup.html')

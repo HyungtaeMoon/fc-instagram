@@ -1,21 +1,17 @@
 {% extends 'base.html' %}
 
-    {% block content %}
-    <div>
-        {% if errors %}
-            <ul>
-                {% for error in errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <form action="" method="POST">
-                {% csrf_token %}
-                <div><label>Username<input type="text" name="username" value="{{ username }}"></label></div>
-                <div><label>Email<input type="email" name="email" value="{{ email }}"></label></div>
-                <div><label>Password<input type="password" name="password"></label></div>
-                <div><lable>Password_check<input type="password" name="password2"></lable></div>
-                <button type="submit">회원가입</button>
-        </form>
-    </div>
+{% block content %}
+<div>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}"> {{ field.label }}</label>
+        {{ field }}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-block">회원가입</button>
+        {{ form.errors }}
+    </form>
+</div>
 {% endblock %}
