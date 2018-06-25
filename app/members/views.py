@@ -21,6 +21,7 @@ def login_view(request):
         password = request.POST.get('password')
 
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             print('성공')
             login(request, user)
@@ -41,17 +42,50 @@ def login_view(request):
 def logout_view(request):
     if request.method == 'POST':
         logout(request)
-        return redirect('posts:post-list')
+        return redirect('index')
 
-    return redirect('posts:post-list')
 
 def signup_view(request):
+    context = {
+        'errors': [],
+    }
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        User.objects.create_user(username=username, password=password)
-        return redirect('posts:post-list')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
 
-    else:
-        return render(request, 'members/signup.html')
-    # return HttpResponse('hello, world!!')
+        if not username:
+            context['errors'].append('username을 채워주세요')
+
+        if not email:
+            context['errors'].append('email을 채워주세요')
+
+        if not password:
+            context['password'].append('password를 채워주세요')
+
+        if not password2:
+            context['password2'].append('password2를 채워주세요')
+
+        # 입력데이터 채워넣기
+        context['username'] = username
+        context['email'] = email
+
+        # form에서 전송된 데이터들이 올바른지 검사
+        if User.objects.filter(username=username).exists():
+            context['errors'].append('유저가 이미 존재함')
+        if password != password2:
+            context['errors'].append('패스워드가 일치하지 않음')
+            # user = authenticate(request, username=username, password=password2)
+
+        # errors 가 없으면 유저 생성 루틴 실행
+        if not context['errors']:
+            user = User.objects.create(
+                username=username,
+                password=password,
+                email=email,
+            )
+            login(request, user)
+            return redirect('index')
+
+    return render(request, 'members/signup.html', context)
