@@ -54,25 +54,11 @@ def signup(request):
             'form': form,
         }
         # form에 들어있는 데이터가 유효한지 검사
+        # is_valid하면 회원가입 버튼을 누른 상태
         if form.is_valid():
-            # 브라우저가 요구하는 형식을 만족
-            # 유효할 경우 유저 생성 및 redirect
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            password2 = form.cleaned_data['password2']
-            print(form.errors)
-
-            user = User.objects.create_user(
-                username=username,
-                email=email,
-                password=password,
-            )
+            user = form.signup()
             login(request, user)
             return redirect('index')
-        else:
-
-            return render(request, 'members/signup.html', context)
 
     else:
         form = SignupForm()
@@ -80,8 +66,7 @@ def signup(request):
             'form': form,
         }
         # if request.method == 'POST':
-
-        return render(request, 'members/signup.html', context)
+    return render(request, 'members/signup.html', context)
 
 
 def signup_bak(request):
@@ -151,25 +136,33 @@ def signup_bak(request):
             return redirect('index')
 
     return render(request, 'members/signup.html', context)
-#
+
 #
 # def signup(request):
+#     context = {
+#         'errors': [],
+#     }
 #     if request.method == 'POST':
 #         username = request.POST['username']
+#         email = request.POST['email']
 #         password = request.POST['password']
+#         password2 = request.POST['password2']
 #
-#         # exists를 사용해서 유저가 이미 존재하면 signup으로 다시 redirect
+#         # 입력데이터 채워넣기
+#         context['username'] = username
+#         context['email'] = email
+#
+#         # form에서 전송된 데이터들이 올바른지 검사
 #         if User.objects.filter(username=username).exists():
-#             context = {
-#                 'errors': [],
-#             }
 #             context['errors'].append('유저가 이미 존재함')
-#             return render(request, 'index', context)
-#         else:
+#         if password != password2:
+#             context['errors'].append('비밀번호가 다릅니다')
+#
+#         if not context['errors']:
 #             user = User.objects.create_user(
 #                 username=username,
 #                 password=password,
 #             )
 #             login(request, user)
 #             return redirect('index')
-#     return render(request, 'members/signup.html')
+#     return render(request, 'members/signup.html', context)

@@ -41,16 +41,31 @@ class SignupForm(forms.Form):
     )
 
     def clean_username(self):
-        reputation = self.cleaned_data['username']
+        # field의 clean()실행 결과가 self.cleaned_data['username']에 있음
+        data = self.cleaned_data['username']
 
-        if User.objects.filter(username=reputation):
-            raise ValidationError('무조건 에러')
+        if User.objects.filter(username=data).exists():
+            raise ValidationError('이미 사용중인 아이디입니다')
+        return data
 
-        return reputation
-
-    def clean_password(self):
+    def clean(self):
+        cleaned_data = super().clean()
         password = self.cleaned_data['password']
-        password2 = self.cleaned_data.get('password2')
+        password2 = self.cleaned_data['password2']
 
+        print(password)
+        print(password2)
         if password != password2:
-            raise ValidationError('에러가 났습니다')
+            self.add_error('password2', '비밀번호와 비밀번호 확인이 다릅니다')
+        return self.cleaned_data
+
+    def signup(self):
+        username = self.cleaned_data['username']
+        email = self.cleaned_data['email']
+        password = self.cleaned_data['password2']
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+        )
+        return user
