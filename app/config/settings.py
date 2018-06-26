@@ -129,4 +129,4 @@ STATIC_URL = '/static/'
 # User-uploaded file을 접근할 URL 접두어
 MEDIA_URL = '/media/'
 
-AUTH_USER_MODEL = 'members.user'
+AUTH_USER_MODEL = 'members.User'
