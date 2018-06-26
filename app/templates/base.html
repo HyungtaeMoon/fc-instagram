@@ -10,7 +10,7 @@
 </head>
 <body>
     <div>
-        <h1>Instargram</h1>
+        <h1><a href="{% url 'index' %}">Instargram</a></h1>
         <div>
             {% if user.is_authenticated %}
             <div>{{ user.id }}로그인 중</div>

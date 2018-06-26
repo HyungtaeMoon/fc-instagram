@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'posts.apps.PostsConfig',
+    'members.apps.MembersConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -127,3 +128,5 @@ STATIC_URL = '/static/'
 
 # User-uploaded file을 접근할 URL 접두어
 MEDIA_URL = '/media/'
+
+AUTH_USER_MODEL = 'members.user'
