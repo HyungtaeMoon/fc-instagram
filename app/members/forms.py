@@ -40,6 +40,7 @@ class SignupForm(forms.Form):
         )
     )
 
+
     def clean_username(self):
         # field의 clean()실행 결과가 self.cleaned_data['username']에 있음
         data = self.cleaned_data['username']
@@ -53,8 +54,6 @@ class SignupForm(forms.Form):
         password = self.cleaned_data['password']
         password2 = self.cleaned_data['password2']
 
-        print(password)
-        print(password2)
         if password != password2:
             self.add_error('password2', '비밀번호와 비밀번호 확인이 다릅니다')
         return self.cleaned_data

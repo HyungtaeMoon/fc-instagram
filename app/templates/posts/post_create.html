@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action="" method="post"></form>
+{% csrf_token %}
+<h3>내용을 작성해주세요</h3>
+<input type="text">
+<div><button type="submit">포스트 업데이트</button></div>
+
+{% endblock %}

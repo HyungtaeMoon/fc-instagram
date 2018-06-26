@@ -9,18 +9,18 @@
     <title>Instargram</title>
 </head>
 <body>
-    <div>
+    <div class="container">
         <h1><a href="{% url 'index' %}">Instargram</a></h1>
         <div>
             {% if user.is_authenticated %}
             <div>{{ user.id }}로그인 중</div>
                 <form action="{% url 'members:logout' %}" method="POST">
                     {% csrf_token %}
-                    <button type="submit">로그아웃</button>
+                    <button class="btn btn-primary btn-sm" type="submit">로그아웃</button>
                 </form>
             {% else %}
-                <a href="{% url 'members:login' %}" methods="POST">로그인하기</a>
-                <a href="{% url 'members:signup' %}">회원가입하기</a>
+                <a class="btn btn-primary btn-sm" href="{% url 'members:login' %}" methods="POST">로그인하기</a>
+                <a class="btn btn-primary btn-sm" href="{% url 'members:signup' %}">회원가입하기</a>
             {% endif %}
         </div>
         {% block content %}
