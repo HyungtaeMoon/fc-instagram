@@ -17,7 +17,6 @@ class SignupForm(forms.Form):
     email = forms.EmailField(
         label='이메일 주소',
         widget=forms.TextInput(
-
             attrs={
                 'class': 'form-control',
             }
@@ -32,6 +31,7 @@ class SignupForm(forms.Form):
         )
     )
     password2 = forms.CharField(
+        required=False,
         label='비밀번호 확인',
         widget=forms.PasswordInput(
             attrs={
@@ -39,7 +39,41 @@ class SignupForm(forms.Form):
             }
         )
     )
+    introduce = forms.CharField(
+        required=False,
+        label='소개하기',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+            }
+            )
+        )
 
+    site = forms.CharField(
+        label='사이트',
+        widget=forms.URLInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+    gender = forms.ChoiceField(
+        label='성별',
+        choices=(
+        ('m', '남성'),
+        ('f', '여성'),
+        ('x', '선택안함'),
+        ),
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+            }
+        ),
+    )
+    img_profile = forms.ImageField(
+        required=False,
+        label='프로필 사진',
+    )
 
     def clean_username(self):
         # field의 clean()실행 결과가 self.cleaned_data['username']에 있음
@@ -62,9 +96,17 @@ class SignupForm(forms.Form):
         username = self.cleaned_data['username']
         email = self.cleaned_data['email']
         password = self.cleaned_data['password2']
+        img_profile = self.cleaned_data['img_profile']
+        introduce = self.cleaned_data['introduce']
+        gender = self.cleaned_data['gender']
+        site = self.cleaned_data['site']
         user = User.objects.create_user(
             username=username,
             email=email,
             password=password,
+            img_profile=img_profile,
+            introduce=introduce,
+            gender=gender,
+            site=site,
         )
         return user

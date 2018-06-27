@@ -1,4 +1,5 @@
 from django.contrib.auth import login, authenticate, logout, get_user_model
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from .forms import SignupForm
@@ -137,6 +138,11 @@ def signup_bak(request):
 
     return render(request, 'members/signup.html', context)
 
+@login_required(login_url='posts:post-list')
+def withdraw(request):
+    if request.method == 'POST':
+        request.user.delete()
+        return redirect('index')
 #
 # def signup(request):
 #     context = {
