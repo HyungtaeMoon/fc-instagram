@@ -2,10 +2,17 @@
 
 {% block content %}
 
-<form action="" method="post"></form>
-{% csrf_token %}
-<h3>내용을 작성해주세요</h3>
-<input type="text">
-<div><button type="submit">포스트 업데이트</button></div>
+<form action="" method="POST" enctype ="multipart/form-data">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+        <label for="{{ field.id_for_label }}"></label>
+    </div>
+    {{ field }}
+    {% endfor %}
+    <div>
+        <button type="submit" class="btn btn-primary btn-block">포스트 업데이트</button>
 
+    </div>
+</form>
 {% endblock %}

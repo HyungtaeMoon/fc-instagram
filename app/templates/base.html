@@ -12,16 +12,25 @@
     <div class="container">
         <h1><a href="{% url 'index' %}">Instargram</a></h1>
         <div>
+
             {% if user.is_authenticated %}
-            <div>{{ user.id }}로그인 중</div>
+            <div>{{ user.name }}로그인 중</div>
                 <form action="{% url 'members:logout' %}" method="POST">
-                    {% csrf_token %}
-                    <button class="btn btn-primary btn-sm" type="submit">로그아웃</button>
+                {% csrf_token %}
+                <button class="btn btn-primary btn-sm" type="submit">로그아웃</button>
                 </form>
+            <form action="{% url 'members:withdraw' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit">회원 탈퇴</button>
+            </form>
             {% else %}
                 <a class="btn btn-primary btn-sm" href="{% url 'members:login' %}" methods="POST">로그인하기</a>
                 <a class="btn btn-primary btn-sm" href="{% url 'members:signup' %}">회원가입하기</a>
             {% endif %}
+             <form action="{% url 'posts:post-create' %}" method="POST" class="float-left mr-2">
+                {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-sm">포스팅하기</button>
+            </form>
         </div>
         {% block content %}
         {% endblock%}

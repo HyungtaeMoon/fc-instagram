@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Post list</h2>
     {% for post in posts %}
         <div>
-            <div>{{ post.author.username}}</div>
+            <div>접속 ID: {{ post.author.username}}</div>
             <div>
-                <img width="100%" src="{{ post.photo.url }}" alt="">
+                <a href="{% url 'posts:post-detail' post.pk %}">
+                    <img width="100%" src="{{ post.photo.url }}" alt="">
+                </a>
             </div>
         </div>
     {% endfor %}

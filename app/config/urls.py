@@ -24,7 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('posts/', include('posts.urls')),
     path('members/', include('members.urls')),
-    path('signup/', include('members.urls')),
     path('', views.index, name='index'),
 
     # path('media/<str:path>/', 특정view_function),
