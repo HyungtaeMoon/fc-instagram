@@ -7,3 +7,6 @@ class Post(models.Model):
     photo = models.ImageField(upload_to='post', blank=True)
     content = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-pk']
