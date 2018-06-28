@@ -1,39 +1,46 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
-    <title>Instargram</title>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+	      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Instagram</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 </head>
 <body>
-    <div class="container">
-        <h1><a href="{% url 'index' %}">Instargram</a></h1>
-        <div>
+	<div class="container">
+		<h1><a href="{% url 'index' %}">Instagram</a></h1>
+		<div>
+			<!--
+				user가 인증되어있으면 '로그아웃하기'라는 링크를 보여주고
+				아니면 '로그인하기'링크 보여주기
 
-            {% if user.is_authenticated %}
-            <div>{{ user.name }}로그인 중</div>
-                <form action="{% url 'members:logout' %}" method="POST">
-                {% csrf_token %}
-                <button class="btn btn-primary btn-sm" type="submit">로그아웃</button>
-                </form>
-            <form action="{% url 'members:withdraw' %}" method="POST">
-                {% csrf_token %}
-                <button type="submit">회원 탈퇴</button>
-            </form>
-            {% else %}
-                <a class="btn btn-primary btn-sm" href="{% url 'members:login' %}" methods="POST">로그인하기</a>
-                <a class="btn btn-primary btn-sm" href="{% url 'members:signup' %}">회원가입하기</a>
-            {% endif %}
-             <form action="{% url 'posts:post-create' %}" method="POST" class="float-left mr-2">
-                {% csrf_token %}
-            <button type="submit" class="btn btn-primary btn-sm">포스팅하기</button>
-            </form>
-        </div>
-        {% block content %}
-        {% endblock%}
-    </div>
+				logout_view를 구현
+					request.method가 POST일 경우,
+					request.user를 로그아웃시킴
+
+				URL: /members/logout/
+				view: members.views.logout_view
+				로그아웃 완료 후에는 index로 redirect
+
+				form action: logout_view
+
+			-->
+			{% if user.is_authenticated %}
+				<span>{{ user }}로 로그인 중</span>
+				<form action="{% url 'members:logout' %}" method="POST">
+					{% csrf_token %}
+					<button class="btn btn-primary btn-sm" type="submit">로그아웃하기</button>
+				</form>
+			{% else %}
+				<a class="btn btn-primary btn-sm" href="{% url 'members:login' %}">로그인하기</a>
+				<a class="btn btn-primary btn-sm" href="{% url 'members:signup' %}">회원가입하기</a>
+			{% endif %}
+			<a class="btn btn-primary btn-sm" href="{% url 'posts:post-create' %}">글 쓰기</a>
+		</div>
+		{% block content %}
+		{% endblock %}
+	</div>
 </body>
 </html>

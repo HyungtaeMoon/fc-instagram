@@ -1,14 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% for post in posts %}
-        <div>
-            <div>접속 ID: {{ post.author.username}}</div>
-            <div>
-                <a href="{% url 'posts:post-detail' post.pk %}">
-                    <img width="100%" src="{{ post.photo.url }}" alt="">
-                </a>
-            </div>
-        </div>
-    {% endfor %}
+	<h2>Post list</h2>
+	{% for post in posts %}
+		<!--
+			post의 author.username과
+			post.photo를 출력
+		-->
+		<div>
+			<div>{{ post.author.username }}</div>
+			<div>
+				<form action="{% url 'posts:post-delete' pk=post.pk %}" method="POST">
+					{% csrf_token %}
+					<button class="btn btn-danger btn-sm">지우기</button>
+				</form>
+
+			</div>
+			<div>
+				{% if post.photo %}
+				<img width="100%" src="{{ post.photo.url }}" alt="">
+				{% endif %}
+			</div>
+		</div>
+	{% endfor %}
 {% endblock %}
