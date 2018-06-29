@@ -10,16 +10,23 @@
 		<div>
 			<div>{{ post.author.username }}</div>
 			<div>
-				<form action="{% url 'posts:post-delete' pk=post.pk %}" method="POST">
-					{% csrf_token %}
-					<button class="btn btn-danger btn-sm">지우기</button>
-				</form>
 
+				<form action="" method="post" style="display: inline-block;">
+					<button type="submit" class="btn btn-outline-primary btn-sm">+ Follow</button>
+				</form>
 			</div>
 			<div>
-				{% if post.photo %}
-				<img width="100%" src="{{ post.photo.url }}" alt="">
-				{% endif %}
+                {% if post.photo %}
+                <a href="{% url 'posts:post-detail' post.pk %}">
+                <img width="100%" src="{{ post.photo.url }}" alt="">
+                </a>
+                <form action="{% url 'posts:post-delete' pk=post.pk %}" method="POST">
+
+                {% csrf_token %}
+                <button class="btn btn-danger btn-sm">지우기</button>
+                </form>
+
+                {% endif %}
 			</div>
 		</div>
 	{% endfor %}

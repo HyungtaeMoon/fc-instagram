@@ -2,9 +2,23 @@
 
 {% block content %}
 <h2>Post detail</h2>
-    <div><img width="100%" src="{{ post.photo.url }}" alt=""></div>
-    <form action="{% url 'posts:post-delete' post.pk %}" method="POST">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger btn-lg">삭제</button>
+<div><img width="100%" src="{{ post.photo.url }}" alt=""></div>
+    <form action="{% url 'posts:comment-create' pk=post.pk %}" method="POST">
+        {% csrf_token %}
+        <div>
+            <input type="text" placeholder="댓글달기" name="comment">
+            <button type="submit">댓글달기</button>
+        </div>
     </form>
-{% endblock %}
+    <p>
+        {% for comment in post.my_comments.all %}
+        <div>
+        {{ comment.user }} : {{ comment.content }}
+        </div>
+    {% endfor %}
+    </p>
+    <form action="{% url 'posts:post-delete' pk=post.pk %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn">삭제</button>
+    </form>
+    {% endblock %}

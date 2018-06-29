@@ -3,6 +3,10 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from members.models import User
 
+# user의 model정보를 fieldsets 형식으로 저장
+# fieldsets = ((None, {'fields':(username','password',)})
+# ('개인정보', {'fields':('last_name', 'first_name'...)})
+# fields에 개인정보 안에 fields:('last_name', 'first_name')의 형식
 class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {

@@ -38,11 +38,10 @@ def login_view(request):
             # session)id값을 django_sessions테이블에 저장, 데이터는 user와 연결됨
             # 이 함수 실행 후 돌려줄 HTTP Response에는 Set-Cookie헤더를 추가, 내용은 session=<session값>
             login(request, user)
-
             next = request.GET.get('next')
             if next:
                 return redirect(next)
-
+                # print(request.GET.get('next'))
             return redirect('posts:post-list')
 
         # 인증에 실패한 경우 (username또는 password가 틀린 경우)
@@ -186,3 +185,10 @@ def withdraw(request):
 #             login(request, user)
 #             return redirect('index')
 #     return render(request, 'members/signup.html', context)
+
+
+def follow_toggle(request):
+    if request.method == 'POST':
+        follow = User(
+
+        )

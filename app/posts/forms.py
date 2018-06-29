@@ -1,11 +1,6 @@
 from django import forms
-from django.contrib.auth import get_user_model
-from django.forms import ModelForm
 
-from posts.models import Post
-
-User = get_user_model()
-
+from .models import Post
 
 
 class PostModelForm(forms.ModelForm):
@@ -13,31 +8,42 @@ class PostModelForm(forms.ModelForm):
     # (어떤 field를 사용할 것이지만 class Meta에 기록)
     class Meta:
         model = Post
-        fields = ('author',
+        fields = (
                   'photo',
-                  'content'
-                  )
-
+                  'content',
+        )
 
 class PostForm(forms.Form):
-    content = forms.CharField(
-        label='글 작성하기',
-        widget=forms.Textarea(
+    photo = forms.ImageField(
+        label='사진',
+        widget=forms.FileInput(
             attrs={
                 'class': 'form-control',
-                'style': 'resize: none'
             }
         )
     )
-    file = forms.ImageField(
-        label='사진 올리기',
+    content = forms.CharField(
+        label='내용',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
     )
 
-    def post_create(self, user):
-        content = self.cleaned_data['content']
-        photo = self.cleaned_data['file']
-        Post.objects.create(
-            author=user,
-            content=content,
-            photo=photo,
+    def save(self, author):
+        return Post.objects.create(
+            author=author,
+            photo=self.cleaned_data['photo'],
+            content=self.cleaned_data['content'],
         )
+
+class PostForm(forms.Form):
+    photo = forms.ImageField(
+        label='사진',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )

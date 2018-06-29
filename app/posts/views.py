@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.views.decorators.http import require_POST
 
 from posts.forms import PostForm, PostModelForm
-from .models import Post
+from .models import Post, Comment
 
 
 def post_list(request):
@@ -42,6 +44,7 @@ def post_create(request):
     }
     return render(request, 'posts/post_create.html', context)
 
+
 # @login_required_with_form(login_url='posts:post-list')
 def post_create_with_form(request):
     if request.method == 'POST':
@@ -68,28 +71,44 @@ def post_create_with_form(request):
 #             raise PermissionDenied('지울 권한이 없습니다')
 #         post.delete()
 #         return redirect('posts:post-list')
-#
+
+@require_POST
 @login_required
 def post_delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    if post.author != request.user:
-        raise PermissionDenied('지울 권한이 없습니다')
-    post.delete()
-    return redirect('posts:post-list')
+    if request.method == 'POST':
+        post = Post.objects.get(pk=pk)
 
-    # if request.method == 'POST':
-    #     post = Post.objects.get(pk=pk)
-    #     if post.author == request.user:
-    #         post.delete()
-    #         return HttpResponse('권한이 없습니다')
-    #     else:
-    #         return render(request, 'posts/403.html')
-    #
-    # return HttpResponse('로그인해주세요')
+        if request.user == post.author:
+            post.delete()
+            return redirect('index')
+
+        else:
+            raise PermissionDenied('지울 권한이 없습니다')
+
+    return HttpResponse('....')
+    # post = get_object_or_404(Post, pk=pk)
+    # if post.author != request.user:
+    #     raise PermissionDenied('지울 권한이 없습니다')
+    # else:
+    #     post.delete()
+    # return redirect('posts:post-list')
+
 
 
 # def post_delete(request, pk):
-#     if request.method != 'POST':
-#         return HttpResponseNotAllowed()
-#     if not request.user.is_authenticated:
-#         return redirect('members:login')
+    # if request.method != 'POST':
+    #     return HttpResponseNotAllowed()
+    # if not request.user.is_authenticated:
+    #     return redirect('members:login')
+
+@login_required
+def comment_create(request, pk):
+    if request.method == 'POST':
+        post = Post.objects.get(pk=pk)
+        Comment.objects.create(
+            post=post,
+            user=request.user,
+            content=request.POST.get('comment'),
+        )
+        return redirect('posts:post-detail', post.pk)
+    return render(request, 'posts:post-detail')
