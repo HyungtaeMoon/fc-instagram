@@ -8,7 +8,21 @@ from .forms import SignupForm
 # ForeignKey에 User모델을 지정할때는 settings.AUTH_USER_MODEL
 User = get_user_model()
 
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('posts:post-list')
+        else:
+            return redirect('members:login')
+
+    else:
+        return redirect(request, 'members/login.html')
 def login_view(request):
 
     # 1. POST요청이 왔는데, 요청이 올바르면서
