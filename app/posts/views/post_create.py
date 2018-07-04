@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 
-from posts.forms import PostModelForm, PostForm
+from ..forms import PostModelForm, PostForm
 
 
 def post_create(request):

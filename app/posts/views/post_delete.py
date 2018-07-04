@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.decorators.http import require_POST
 
-from posts.models import Post
+from ..models import Post
 
 
 @require_POST

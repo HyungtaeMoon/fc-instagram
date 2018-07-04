@@ -9,4 +9,6 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('signup/', views.signup, name='signup'),
     path('withdraw/', views.withdraw, name='withdraw'),
+
+    path('facebook-login/', views.facebook_login, name='facebook-login')
 ]
